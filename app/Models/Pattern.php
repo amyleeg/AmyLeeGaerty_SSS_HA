@@ -7,5 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pattern extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'title', 'slug', 'category_id',
+        'difficulty', 'description',
+        'preview_image', 'pattern_pdf'
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function sizes()
+    {
+        return $this->hasMany(PatternSize::class);
+    }
 }

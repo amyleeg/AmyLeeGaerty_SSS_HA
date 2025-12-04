@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class PatternSize extends Model
 {
-    use HasFactory;
+    protected $fillable = ['pattern_id', 'size_label', 'measurements', 'pdf_path'];
+
+    public function pattern()
+    {
+        return $this->belongsTo(Pattern::class);
+    }
 }
