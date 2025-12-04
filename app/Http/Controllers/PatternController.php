@@ -11,7 +11,8 @@ class PatternController extends Controller
      */
     public function index()
     {
-        //
+        $patterns = Pattern::all(); 
+        return view('patterns.index', compact('patterns'));
     }
 
     /**
