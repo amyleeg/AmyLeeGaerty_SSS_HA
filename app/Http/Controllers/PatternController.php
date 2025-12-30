@@ -2,64 +2,111 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pattern;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PatternController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $patterns = Pattern::all(); 
-        return view('patterns.index', compact('patterns'));
+        $query = Pattern::with('category');
+
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        if ($request->filled('difficulty')) {
+            $query->where('difficulty', $request->difficulty);
+        }
+
+        if ($request->filled('sort')) {
+            if ($request->sort === 'latest') {
+                $query->orderBy('created_at', 'desc');
+            }
+        }
+
+        $patterns = $query->get();
+        $categories = Category::all();
+
+        return view('patterns.index', compact('patterns', 'categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('patterns.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'difficulty' => 'required|in:beginner,intermediate,advanced',
+            'description' => 'required|string',
+            'preview_image' => 'required|image|max:2048',
+            'pattern_pdf' => 'required|mimes:pdf|max:10240',
+        ]);
+
+        $pattern = Pattern::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'category_id' => $request->category_id,
+            'difficulty' => $request->difficulty,
+            'description' => $request->description,
+            'preview_image' => $request->file('preview_image')->store('images', 'public'),
+            'pattern_pdf' => $request->file('pattern_pdf')->store('pdfs', 'public'),
+        ]);
+
+        return redirect()->route('patterns.show', $pattern->slug);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($slug)
     {
-        //
+        $pattern = Pattern::where('slug', $slug)
+            ->with('sizes', 'category')
+            ->firstOrFail();
+
+        return view('patterns.show', compact('pattern'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($slug)
     {
-        //
+        $pattern = Pattern::where('slug', $slug)->firstOrFail();
+        $categories = Category::all();
+
+        return view('patterns.edit', compact('pattern', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $slug)
     {
-        //
+        $pattern = Pattern::where('slug', $slug)->firstOrFail();
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'difficulty' => 'required|in:beginner,intermediate,advanced',
+            'description' => 'required|string',
+        ]);
+
+        $pattern->update([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'category_id' => $request->category_id,
+            'difficulty' => $request->difficulty,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('patterns.show', $pattern->slug);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($slug)
     {
-        //
+        $pattern = Pattern::where('slug', $slug)->firstOrFail();
+        $pattern->delete();
+
+        return redirect()->route('home');
     }
 }
