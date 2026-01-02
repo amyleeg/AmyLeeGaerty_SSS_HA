@@ -3,6 +3,10 @@
 @section('content')
 <h1 class="mb-4">Sewing Patterns</h1>
 
+<a href="{{ route('patterns.create') }}" class="btn btn-primary mb-3">
+    Submit New Pattern
+</a>
+
 <div class="row">
 @foreach($patterns as $pattern)
     <div class="col-md-4 mb-4">
