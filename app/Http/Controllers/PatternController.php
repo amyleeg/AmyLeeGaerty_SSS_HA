@@ -68,7 +68,7 @@ class PatternController extends Controller
 
         $results = $response->json('results');
 
-        if ($response->failed() || empty($results) || stripos($results[0]['alt_description'], $request->title) === false) {
+        if ($response->failed() || empty($results)) {
             return back()->withErrors([
                 'title' => 'No sewing-related images were found for this pattern title. Please choose a more descriptive title.'
             ])->withInput();
