@@ -27,8 +27,21 @@
 </nav>
 
 
-<div class="container">
+<div class="container mt-4">
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     @yield('content')
+
 </div>
 
 </body>

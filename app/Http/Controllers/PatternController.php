@@ -6,6 +6,8 @@ use App\Models\Pattern;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+
 
 class PatternController extends Controller
 {
@@ -50,6 +52,28 @@ class PatternController extends Controller
             'pattern_pdf' => 'required|mimes:pdf|max:10240',
         ]);
 
+        $blocked = ['random', 'test', 'abc'];
+        if (in_array(strtolower($request->title), $blocked)) {
+            return back()->withErrors([
+                'title' => 'This title is too generic. Please choose a descriptive title.'
+            ])->withInput();
+        }
+
+        $response = Http::get('https://api.unsplash.com/search/photos', [
+            'query' => $request->title . ' sewing pattern',
+            'client_id' => config('services.unsplash.key'),
+            'per_page' => 1
+        ]);
+
+
+        $results = $response->json('results');
+
+        if ($response->failed() || empty($results) || stripos($results[0]['alt_description'], $request->title) === false) {
+            return back()->withErrors([
+                'title' => 'No sewing-related images were found for this pattern title. Please choose a more descriptive title.'
+            ])->withInput();
+        }
+
         $pattern = Pattern::create([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
@@ -62,6 +86,7 @@ class PatternController extends Controller
 
         return redirect()->route('patterns.show', $pattern->slug);
     }
+
 
     public function show($slug)
     {
