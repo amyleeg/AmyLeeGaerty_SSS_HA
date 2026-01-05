@@ -15,3 +15,6 @@ Route::resource('patterns', PatternController::class)->parameters([
 Route::post('patterns/{slug}/sizes', [PatternSizeController::class, 'store'])->name('sizes.store');
 
 Route::resource('categories', CategoryController::class)->except(['edit', 'update', 'show']);
+
+Route::put('/patterns/{slug}', [PatternController::class, 'update'])
+    ->name('patterns.update');

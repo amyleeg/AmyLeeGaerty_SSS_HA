@@ -88,7 +88,7 @@ class PatternController extends Controller
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'difficulty' => 'required|in:beginner,intermediate,advanced',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
         ]);
 
         $pattern->update([
