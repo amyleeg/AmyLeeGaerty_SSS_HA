@@ -119,17 +119,34 @@ class PatternController extends Controller
             'category_id' => 'required|exists:categories,id',
             'difficulty' => 'required|in:beginner,intermediate,advanced',
             'description' => 'nullable|string',
+            'preview_image' => 'nullable|image|max:2048',
+            'pattern_pdf' => 'nullable|mimes:pdf|max:10240',
         ]);
 
-        $pattern->update([
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'category_id' => $request->category_id,
-            'difficulty' => $request->difficulty,
-            'description' => $request->description,
-        ]);
+        $data = [
+        'title' => $request->title,
+        'slug' => Str::slug($request->title),
+        'category_id' => $request->category_id,
+        'difficulty' => $request->difficulty,
+        'description' => $request->description,
+        ];
+        
+        if ($request->hasFile('preview_image')) {
+            $data['preview_image'] = $request
+                ->file('preview_image')
+                ->store('images', 'public');
+        }
 
-        return redirect()->route('patterns.show', $pattern->slug);
+        if ($request->hasFile('pattern_pdf')) {
+            $data['pattern_pdf'] = $request
+                ->file('pattern_pdf')
+                ->store('pdfs', 'public');
+        }
+
+        $pattern->update($data);
+
+        return redirect()->route('patterns.show', $pattern->slug)
+            ->with('success', 'Pattern updated successfully');
     }
 
     public function destroy($slug)

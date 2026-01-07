@@ -6,14 +6,17 @@
 <p><strong>Difficulty:</strong> {{ ucfirst($pattern->difficulty) }}</p>
 <p>{{ $pattern->description }}</p>
 
-<img src="{{ asset('storage/'.$pattern->preview_image) }}" class="img-fluid mb-3">
+<img src="{{ asset('storage/'.$pattern->preview_image) }}"
+     class="img-fluid mb-3"
+     style="max-height: 350px; object-fit: contain;">
 
-<a href="{{ asset('storage/'.$pattern->pattern_pdf) }}" class="btn btn-success mb-3">
+
+
+<div class="mb-4">
+    <a href="{{ asset('storage/'.$pattern->pattern_pdf) }}" class="btn btn-success">
     Download Pattern PDF
 </a>
 
-<!-- EDIT + DELETE BUTTONS -->
-<div class="mb-4">
     <a href="{{ route('patterns.edit', $pattern->slug) }}"
        class="btn btn-warning">
         Edit Pattern
