@@ -33,6 +33,10 @@
             <select name="sort" class="form-control">
                 <option value="">Sort By</option>
                 <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
+                <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>
+    Alphabetical
+</option>
+
             </select>
         </div>
 

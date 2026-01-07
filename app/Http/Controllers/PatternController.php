@@ -29,6 +29,11 @@ class PatternController extends Controller
             }
         }
 
+        if ($request->sort === 'title') {
+    $query->orderBy('title');
+}
+
+
         $patterns = $query->get();
         $categories = Category::all();
 
