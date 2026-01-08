@@ -33,9 +33,20 @@ class CategoryController extends Controller
         return redirect()->route('categories.index');
     }
 
-    public function destroy($id)
-    {
-        Category::findOrFail($id)->delete();
-        return redirect()->route('categories.index');
+public function destroy($id)
+{
+    $category = Category::findOrFail($id);
+
+    if ($category->patterns()->count() > 0) {
+        
+        return redirect()->route('categories.index')
+                         ->with('error', 'Cannot delete category because it has linked patterns.');
     }
+
+    $category->delete();
+
+    return redirect()->route('categories.index')
+                     ->with('success', 'Category deleted successfully.');
+}
+
 }
