@@ -5,7 +5,7 @@
 <div class="d-flex align-items-center mb-4 justify-content-between">
     <h1 class="mb-0">Sewing Patterns</h1>
     <a href="{{ route('patterns.create') }}" class="btn btn-primary">
-        Submit New Pattern
+        Add New Pattern
     </a>
 </div>
 
@@ -62,7 +62,13 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">{{ $pattern->title }}</h5>
 
-                        <span class="badge bg-info text-dark mb-2">{{ ucfirst($pattern->difficulty) }}</span>
+                        <span class="badge mb-2 
+                            @if($pattern->difficulty === 'beginner') bg-success
+                            @elseif($pattern->difficulty === 'intermediate') bg-warning text-dark
+                            @elseif($pattern->difficulty === 'advanced') bg-danger
+                            @endif">
+                            {{ ucfirst($pattern->difficulty) }}
+                        </span>
 
                         @if($pattern->description)
                             <p class="text-truncate mb-3">{{ $pattern->description }}</p>

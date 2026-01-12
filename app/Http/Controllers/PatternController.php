@@ -53,7 +53,7 @@ class PatternController extends Controller
             'category_id' => 'required|exists:categories,id',
             'difficulty' => 'required|in:beginner,intermediate,advanced',
             'description' => 'nullable|string',
-            'preview_image' => 'required|image|max:2048',
+            'preview_image' => 'required|image|max:4096',
             'pattern_pdf' => 'required|mimes:pdf|max:10240',
         ]);
 

@@ -5,7 +5,14 @@
     <div class="card-body">
         <h1 class="card-title">{{ $pattern->title }}</h1>
         <p class="card-text"><strong>Difficulty:</strong>
-    <span class="badge bg-info text-dark">{{ ucfirst($pattern->difficulty) }}</span>
+    <span class="badge 
+    @if($pattern->difficulty === 'beginner') bg-success
+    @elseif($pattern->difficulty === 'intermediate') bg-warning text-dark
+    @elseif($pattern->difficulty === 'advanced') bg-danger
+    @endif
+">
+    {{ ucfirst($pattern->difficulty) }}
+</span>
 </p>
         @if($pattern->description)
             <p class="card-text">{{ $pattern->description }}</p>
@@ -22,14 +29,14 @@
     </a>
 
     <a href="{{ route('patterns.edit', $pattern->slug) }}" class="btn btn-warning me-2">
-        Edit Pattern
+        Edit 
     </a>
 
     <form method="POST" action="{{ route('patterns.destroy', $pattern->slug) }}" class="d-inline">
         @csrf
         @method('DELETE')
         <button class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this pattern?')">
-            Delete
+            Delete 
         </button>
     </form>
 </div>
@@ -46,6 +53,9 @@
         @if($size->pdf_path)
             - <a href="{{ asset('storage/'.$size->pdf_path) }}">Download</a>
         @endif
+        <!-- @if($size->measurements)
+            <p>{{ $size->measurements }}</p>
+        @endif -->
     </li>
 @endforeach
 </ul>
