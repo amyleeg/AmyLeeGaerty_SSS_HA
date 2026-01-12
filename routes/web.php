@@ -18,3 +18,5 @@ Route::resource('categories', CategoryController::class)->except(['edit', 'updat
 
 Route::put('/patterns/{slug}', [PatternController::class, 'update'])
     ->name('patterns.update');
+
+Route::delete('sizes/{id}', [PatternSizeController::class, 'destroy'])->name('sizes.destroy');

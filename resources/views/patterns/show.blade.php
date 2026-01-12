@@ -48,17 +48,24 @@
 
 <ul class="list-group mb-4">
 @foreach($pattern->sizes as $size)
-    <li class="list-group-item">
-        <strong>{{ $size->size_label }}</strong>
-        @if($size->pdf_path)
-            - <a href="{{ asset('storage/'.$size->pdf_path) }}">Download</a>
-        @endif
-        <!-- @if($size->measurements)
-            <p>{{ $size->measurements }}</p>
-        @endif -->
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <strong>{{ $size->size_label }}</strong>
+            @if($size->pdf_path)
+                - <a href="{{ asset('storage/'.$size->pdf_path) }}">Download</a>
+            @endif
+        </div>
+        <form method="POST" action="{{ route('sizes.destroy', $size->id) }}" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this size?')">
+                Delete
+            </button>
+        </form>
     </li>
 @endforeach
 </ul>
+
 
 @include('patterns.partials.size-form')
 @endsection

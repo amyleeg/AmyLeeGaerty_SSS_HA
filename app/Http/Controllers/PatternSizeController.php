@@ -29,4 +29,13 @@ class PatternSizeController extends Controller
 
         return back();
     }
+
+    public function destroy($id)
+{
+    $size = PatternSize::findOrFail($id);
+    $size->delete();
+
+    return back()->with('success', 'Size deleted successfully.');
+}
+
 }

@@ -23,16 +23,11 @@ class PatternController extends Controller
             $query->where('difficulty', $request->difficulty);
         }
 
-        if ($request->filled('sort')) {
-            if ($request->sort === 'latest') {
-                $query->orderBy('created_at', 'desc');
-            }
+        if ($request->sort === 'latest') {
+            $query->orderBy('created_at', 'desc');
+        } elseif ($request->sort === 'title') {
+            $query->orderBy('title');
         }
-
-        if ($request->sort === 'title') {
-    $query->orderBy('title');
-}
-
 
         $patterns = $query->get();
         $categories = Category::all();

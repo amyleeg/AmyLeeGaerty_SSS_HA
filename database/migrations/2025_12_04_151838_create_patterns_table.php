@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->enum('difficulty', ['beginner','intermediate','advanced']);
-            $table->text('description')->nullable();;
+            $table->text('description')->nullable();
             $table->string('preview_image');
             $table->string('pattern_pdf');
             $table->timestamps();
